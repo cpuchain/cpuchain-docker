@@ -34,7 +34,7 @@ RUN wget https://raw.githubusercontent.com/cpuchain/cpuchain/master/cpuchain.pgp
 
 RUN cp -r /opt/coins/blockbook/CPUchain/* .
 
-ENTRYPOINT [ "/opt/coins/blockbook/CPUchain/bin/blockbook" ]
+ENTRYPOINT [ "/root/bin/blockbook" ]
 
 EXPOSE 9190
 EXPOSE 9090
