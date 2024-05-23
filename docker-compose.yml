@@ -1,0 +1,75 @@
+services:
+  cpuchain_torrent:
+    container_name: cpuchain_torrent
+    image: linuxserver/transmission:4.0.5
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain
+    environment:
+      - TZ=Etc/UTC
+      - PUID=1000
+      - PGID=1000
+    ports:
+      # WARNING! IN PRODUCTION EITHER USE '127.0.0.1:9091:9091' or block port with firewall to prevent spam
+      - '9091:9091'
+      - 51413:51413
+      - 51413:51413/udp
+    volumes:
+      - ./torrent/config:/config
+      - ./torrent/downloads:/downloads
+      - ./torrent/watch:/watch
+  cpuchain_node1:
+    container_name: cpuchain_node1
+    image: cpuchain/cpuchain:25.2.1
+    platform: linux/x86_64
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain
+    ports:
+      # P2P
+      - 19706
+      # RPC
+      - '127.0.0.1:19707:19707'
+    volumes:
+      - ./cpuchain.conf:/cpuchain.conf
+      - ./node1:/root/.cpuchain
+    command: |
+      -conf=/cpuchain.conf
+    healthcheck:
+      test: ['CMD-SHELL', 'cpuchain-cli -conf=/cpuchain.conf -getinfo']
+      interval: 60s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+  cpuchain_blockbook:
+    container_name: cpuchain_blockbook
+    image: cpuchain/blockbook:0.4.0
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain
+    ports:
+      # WEB
+      - '9190:9190'
+      # Internal
+      - '127.0.0.1:9090:9090'
+    volumes:
+      - ./blockchaincfg.json:/blockchaincfg.json
+      - ./blockbook:/blockbook
+    command: |
+      -blockchaincfg=/blockchaincfg.json
+      -datadir=/blockbook/db
+      -sync
+      -internal=0.0.0.0:9090
+      -public=0.0.0.0:9190
+      -explorer=
+      -log_dir=/blockbook/logs
+      -logtostderr
+    depends_on:
+      cpuchain_node1:
+        condition: service_healthy
+networks:
+  cpuchain:
+    name: cpuchain

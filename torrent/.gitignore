@@ -1,0 +1,5 @@
+*
+!.gitignore
+!config
+!config/torrents
+!config/torrents/*.torrent
