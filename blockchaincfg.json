@@ -7,7 +7,7 @@
   "rpc_pass": "cpuchain",
   "rpc_timeout": 25,
   "parse": true,
-  "message_queue_binding": "tcp://127.0.0.1:29000",
+  "message_queue_binding": "tcp://cpuchain_node1:29000",
   "subversion": "/CPUchain:25.2.1/",
   "address_format": "",
   "xpub_magic": 76067358,
@@ -19,3 +19,4 @@
   "mempool_sub_workers": 2,
   "block_addresses_to_keep": 300
 }
+
