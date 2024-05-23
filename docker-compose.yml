@@ -19,6 +19,30 @@ services:
       - ./torrent/config:/config
       - ./torrent/downloads:/downloads
       - ./torrent/watch:/watch
+  cpuchain_mini:
+    container_name: cpuchain_mini
+    image: cpuchain/cpuchain:25.2.1
+    platform: linux/x86_64
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain
+    ports:
+      # P2P
+      - 19706
+      # RPC
+      - '127.0.0.1:19707:19707'
+    volumes:
+      - ./cpuchain-mini.conf:/cpuchain.conf
+      - ./node_mini:/root/.cpuchain
+    command: |
+      -conf=/cpuchain.conf
+    healthcheck:
+      test: ['CMD-SHELL', 'cpuchain-cli -conf=/cpuchain.conf -getinfo']
+      interval: 60s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
   cpuchain_node1:
     container_name: cpuchain_node1
     image: cpuchain/cpuchain:25.2.1
