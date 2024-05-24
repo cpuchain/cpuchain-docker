@@ -31,7 +31,7 @@ services:
       context: .
     ports:
       # P2P
-      - 19706
+      - '19706:19706'
       # RPC
       - '127.0.0.1:19707:19707'
     volumes:
