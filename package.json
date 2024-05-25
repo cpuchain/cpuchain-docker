@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "docker compose -f docker-compose.dev.yml build --no-cache",
-    "start": "docker compose up -d cpuchain_torrent cpuchain_node1 cpuchain_blockbook",
-    "start:mini": "docker compose up -d cpuchain_torrent cpuchain_mini"
+    "start": "docker compose up -d cpuchain_torrent cpuchain_node1",
+    "start:blockbook": "docker compose up -d cpuchain_torrent cpuchain_node1 cpuchain_blockbook",
+    "start:mini": "docker compose up -d cpuchain_torrent cpuchain_mini",
+    "exec": "docker compose exec -it cpuchain_node1 cpuchain-cli -conf=/cpuchain.conf"
   },
   "author": "",
   "license": "ISC"

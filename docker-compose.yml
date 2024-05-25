@@ -19,6 +19,7 @@ services:
       - ./torrent/config:/config
       - ./torrent/downloads:/downloads
       - ./torrent/watch:/watch
+  # Minimal node with minimal memory allocation for embedded devices
   cpuchain_mini:
     container_name: cpuchain_mini
     image: cpuchain/cpuchain:25.2.1
@@ -43,6 +44,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 30s
+  # Node with txindex that could run behind blockbook
+  # Suitable for merchants and exchanges
   cpuchain_node1:
     container_name: cpuchain_node1
     image: cpuchain/cpuchain:25.2.1
