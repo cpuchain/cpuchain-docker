@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker container exec -it cpuchain_node1 cpuchain-cli -conf=/cpuchain.conf "$@"
