@@ -1,0 +1,57 @@
+services:
+  cpuchain_testnet:
+    container_name: cpuchain_testnet
+    image: cpuchain/cpuchain:25.2.1
+    platform: linux/x86_64
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain
+    ports:
+      # P2P
+      - '29706:29706'
+      # RPC
+      - '127.0.0.1:29707:29707'
+    volumes:
+      - ./cpuchain-testnet.conf:/cpuchain.conf
+      - ./node-testnet:/root/.cpuchain
+    command: |
+      -conf=/cpuchain.conf
+    healthcheck:
+      test: ['CMD-SHELL', 'cpuchain-cli -conf=/cpuchain.conf -getinfo']
+      interval: 60s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+  cpuchain_testnet_blockbook:
+    container_name: cpuchain_testnet_blockbook
+    image: cpuchain/blockbook:0.4.0
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain
+    ports:
+      # WEB
+      - '19190:19190'
+      # Internal
+      - '127.0.0.1:19090:19090'
+    volumes:
+      - ./blockchaincfg-testnet.json:/blockchaincfg.json
+      - ./blockbook-testnet:/blockbook
+    working_dir: /opt/coins/blockbook/cpuchain_testnet
+    entrypoint: ["./bin/blockbook"]
+    command: |
+      -blockchaincfg=/blockchaincfg.json
+      -datadir=/blockbook/db
+      -sync
+      -internal=0.0.0.0:19090
+      -public=0.0.0.0:19190
+      -explorer=
+      -log_dir=/blockbook/logs
+      -logtostderr
+    depends_on:
+      cpuchain_testnet:
+        condition: service_healthy
+networks:
+  cpuchain:
+    name: cpuchain

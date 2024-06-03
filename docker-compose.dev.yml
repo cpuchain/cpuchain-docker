@@ -60,6 +60,8 @@ services:
       - '9190:9190'
       # Internal
       - '127.0.0.1:9090:9090'
+    working_dir: /opt/coins/blockbook/cpuchain_testnet
+    entrypoint: ["./bin/blockbook"]
     volumes:
       - ./blockchaincfg.json:/blockchaincfg.json
       - ./blockbook:/blockbook
