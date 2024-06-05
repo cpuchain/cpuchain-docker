@@ -38,7 +38,7 @@ services:
     volumes:
       - ./blockchaincfg-testnet.json:/blockchaincfg.json
       - ./blockbook-testnet:/blockbook
-    working_dir: /opt/coins/blockbook/cpuchain_testnet
+    working_dir: /opt/coins/blockbook/cpuchain
     entrypoint: ["./bin/blockbook"]
     command: |
       -blockchaincfg=/blockchaincfg.json
