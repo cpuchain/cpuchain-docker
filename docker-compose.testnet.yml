@@ -32,7 +32,7 @@ services:
       - cpuchain
     ports:
       # WEB
-      - '19190:19190'
+      - '127.0.0.1:19190:19190'
       # Internal
       - '127.0.0.1:19090:19090'
     volumes:
