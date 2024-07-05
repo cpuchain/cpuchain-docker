@@ -1,3 +1,4 @@
 node*
 blockbook*
 !blockbook.Dockerfile
+!build/*
