@@ -58,7 +58,8 @@ RUN go get -u -v github.com/linxGnu/grocksdb@v1.8.12
 #  CGO_LDFLAGS="-L/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy -llz4 -lzstd" \
 #  go build -v -o blockbook blockbook.go
 RUN export LDFLAGS="-X github.com/trezor/blockbook/common.version=$BLOCKBOOK_VERSION -X github.com/trezor/blockbook/common.gitcommit=$(git describe --always) -X github.com/trezor/blockbook/common.buildtime=$(date --iso-8601=seconds)" && \
-  go build -v -ldflags="-s -w $LDFLAGS" -o blockbook blockbook.go
+  go build -v -ldflags="-s -w $LDFLAGS" -o blockbook blockbook.go && \
+  go build -v -o blockbookgen build/templates/generate.go
 
 # The blockbook runtime image with only the executable and necessary libraries
 FROM ubuntu:noble AS blockbook
@@ -79,8 +80,11 @@ COPY --from=blockbook-build /blockbook /blockbook
 WORKDIR /blockbook
 
 RUN ln -s /blockbook/blockbook /usr/local/bin/blockbook
+RUN ln -s /blockbook/blockbookgen /usr/local/bin/blockbookgen
 
 RUN printf '#!/bin/sh\nexec ./blockbook "$@"' >> entrypoint.sh
+RUN printf '#!/bin/sh\n./blockbookgen "$@"\nexec cat build/pkg-defs/blockbook/blockchaincfg.json' >> generate.sh
 RUN chmod u+x entrypoint.sh
+RUN chmod u+x generate.sh
 
 ENTRYPOINT [ "./entrypoint.sh" ]
