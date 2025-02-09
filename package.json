@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:classic": "docker compose -f docker-compose.classic.yml up -d cpuchain_torrent cpuchain_classic cpuchain_classic_blockbook",
+    "docker:classic": "docker compose -f docker-compose.classic.yml",
     "cli:classic": "docker container exec -it cpuchain_classic cpuchain-cli -conf=/cpuchain.conf"
   },
   "author": "",

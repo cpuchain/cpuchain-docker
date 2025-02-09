@@ -5,7 +5,7 @@ services:
     restart: always
     stop_grace_period: 30m
     networks:
-      - cpuchain
+      - cpuchain_classic
     environment:
       - TZ=Etc/UTC
       - PUID=1000
@@ -29,7 +29,7 @@ services:
     restart: always
     stop_grace_period: 30m
     networks:
-      - cpuchain
+      - cpuchain_classic
     ports:
       # P2P
       - '19706:19706'
@@ -52,7 +52,7 @@ services:
     restart: always
     stop_grace_period: 30m
     networks:
-      - cpuchain
+      - cpuchain_classic
     ports:
       # WEB
       - '127.0.0.1:9190:9190'
@@ -74,5 +74,5 @@ services:
       cpuchain_classic:
         condition: service_healthy
 networks:
-  cpuchain:
-    name: cpuchain
+  cpuchain_classic:
+    name: cpuchain_classic
