@@ -1,4 +1,2 @@
-node*
-blockbook*
-!blockbook.Dockerfile
-!build/*
+classic_node
+classic_blockbook

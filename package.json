@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "docker compose up -d cpuchain_torrent cpuchain_node1",
-    "start:blockbook": "docker compose up -d cpuchain_torrent cpuchain_node1 cpuchain_blockbook",
-    "start:mini": "docker compose up -d cpuchain_torrent cpuchain_mini"
+    "start:classic": "docker compose -f docker-compose.classic.yml up -d cpuchain_torrent cpuchain_classic cpuchain_classic_blockbook",
+    "cli:classic": "docker container exec -it cpuchain_classic cpuchain-cli -conf=/cpuchain.conf"
   },
   "author": "",
   "license": "ISC"
