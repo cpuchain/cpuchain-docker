@@ -1,0 +1,12 @@
+{
+  "name": "cpuchain-docker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docker:classic": "docker compose -f docker-compose.classic.yml",
+    "cli:classic": "docker container exec -it cpuchain_classic cpuchain-cli -conf=/cpuchain.conf"
+  },
+  "author": "",
+  "license": "ISC"
+}

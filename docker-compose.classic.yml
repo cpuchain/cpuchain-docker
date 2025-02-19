@@ -1,0 +1,78 @@
+services:
+  cpuchain_torrent:
+    container_name: cpuchain_torrent
+    image: linuxserver/transmission:4.0.5
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain_classic
+    environment:
+      - TZ=Etc/UTC
+      - PUID=1000
+      - PGID=1000
+    ports:
+      # Admin
+      - '127.0.0.1:9091:9091'
+      # P2P
+      - 51413:51413
+      - 51413:51413/udp
+    volumes:
+      - ./torrent/config:/config
+      - ./torrent/downloads:/downloads
+      - ./torrent/watch:/watch
+  # Node with txindex that could run behind blockbook
+  # Suitable for merchants and exchanges
+  cpuchain_classic:
+    container_name: cpuchain_classic
+    image: cpuchain/cpuchain:25.2.1
+    platform: linux/x86_64
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain_classic
+    ports:
+      # P2P
+      - '19706:19706'
+      # RPC
+      - '127.0.0.1:19707:19707'
+    volumes:
+      - ./classic/cpuchain.conf:/cpuchain.conf
+      - ./classic_node:/root/.cpuchain
+    command: |
+      -conf=/cpuchain.conf
+    healthcheck:
+      test: ['CMD-SHELL', 'cpuchain-cli -conf=/cpuchain.conf -getinfo']
+      interval: 60s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+  cpuchain_classic_blockbook:
+    container_name: cpuchain_classic_blockbook
+    image: cpuchain/blockbook:0.4.0.1
+    restart: always
+    stop_grace_period: 30m
+    networks:
+      - cpuchain_classic
+    ports:
+      # WEB
+      - '127.0.0.1:9190:9190'
+      # Internal
+      - '127.0.0.1:9090:9090'
+    volumes:
+      - ./classic/blockchaincfg.json:/blockchaincfg.json
+      - ./classic_blockbook:/data
+    command: |
+      -blockchaincfg=/blockchaincfg.json
+      -datadir=/data
+      -sync
+      -internal=0.0.0.0:9090
+      -public=0.0.0.0:9190
+      -explorer=
+      -log_dir=/data/logs
+      -logtostderr
+    depends_on:
+      cpuchain_classic:
+        condition: service_healthy
+networks:
+  cpuchain_classic:
+    name: cpuchain_classic
