@@ -36,8 +36,8 @@ services:
       # RPC
       - '127.0.0.1:19707:19707'
     volumes:
-      - ./classic/cpuchain.conf:/cpuchain.conf
-      - ./classic_node:/root/.cpuchain
+      - ./cpuchain.conf:/cpuchain.conf
+      - ./node:/root/.cpuchain
     command: |
       -conf=/cpuchain.conf
     healthcheck:
@@ -48,7 +48,7 @@ services:
       start_period: 30s
   cpuchain_classic_blockbook:
     container_name: cpuchain_classic_blockbook
-    image: cpuchain/blockbook:0.4.0.1
+    image: ghcr.io/cpuchain/blockbook-docker:cpuchain-latest
     restart: always
     stop_grace_period: 30m
     networks:
@@ -59,8 +59,8 @@ services:
       # Internal
       - '127.0.0.1:9090:9090'
     volumes:
-      - ./classic/blockchaincfg.json:/blockchaincfg.json
-      - ./classic_blockbook:/data
+      - ./blockchaincfg.json:/blockchaincfg.json
+      - ./blockbook:/data
     command: |
       -blockchaincfg=/blockchaincfg.json
       -datadir=/data
